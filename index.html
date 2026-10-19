@@ -1,3 +1,6 @@
+הנה כל הקוד. העתק אותו בשלמותו לקובץ `index.html`. חשוב להשאיר את קובצי ה־M4A וה־PNG באותה תיקייה שבה נמצא הקובץ.
+
+```html
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
@@ -194,6 +197,8 @@ footer { color: var(--muted); font-size: 14px; text-align: center; margin-top: 3
   <a href="#s4">4 · השוואה</a>
   <a href="#s5">5 · AI</a>
   <a href="#s6">6 · סיכום</a>
+  <a href="#podcast">🎧 פודקאסט</a>
+  <a href="#infographic">🖼️ אינפוגרפיקה</a>
 </nav>
 
 <!-- פרטי השיעור -->
@@ -434,8 +439,30 @@ footer { color: var(--muted); font-size: 14px; text-align: center; margin-top: 3
   <p>מצאו בבית שלושה מכשירים שיש בהם מיקרו-בקר. לכל אחד, כתבו מה הקלט, מה העיבוד ומה הפלט.</p>
 </section>
 
+<section id="podcast" aria-labelledby="podcast-title">
+  <h2 id="podcast-title">🎧 הפודקאסט: PLC מול Arduino ובינה מלאכותית בבקרה</h2>
+  <p>האזינו לפרק בנושא בקרים ומיקרו־בקרים. אפשר להפעיל, להשהות ולדלג באמצעות פקדי הנגן.</p>
+  <audio controls preload="metadata" style="display:block;width:100%;margin:16px 0">
+    <source src="PLC_מול_ארדואינו_ובינה_מלאכותית_בבקרה.m4a" type="audio/mp4">
+    הדפדפן אינו תומך בניגון קובץ M4A. <a href="PLC_מול_ארדואינו_ובינה_מלאכותית_בבקרה.m4a">הורדת הפודקאסט</a>
+  </audio>
+  <p><a href="PLC_מול_ארדואינו_ובינה_מלאכותית_בבקרה.m4a" download>הורדת קובץ הפודקאסט</a></p>
+</section>
+
+<section id="infographic" aria-labelledby="infographic-title">
+  <h2 id="infographic-title">🖼️ אינפוגרפיקה: השוואה בין בקרים למיקרו־בקרים</h2>
+  <figure style="margin:16px 0">
+    <a href="השוואה_בין_בקרים_למיקרו-בקרים.png" target="_blank" rel="noopener">
+      <img src="השוואה_בין_בקרים_למיקרו-בקרים.png" alt="אינפוגרפיקה המשווה בין בקר תעשייתי PLC למיקרו־בקר, כולל מאפיינים ושימושים" loading="lazy" style="display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:12px">
+    </a>
+    <figcaption class="en">לחצו על האינפוגרפיקה לפתיחתה בגודל מלא.</figcaption>
+  </figure>
+  <p><a href="השוואה_בין_בקרים_למיקרו-בקרים.png" download>הורדת האינפוגרפיקה</a></p>
+</section>
+
 <footer>מערך שיעור · מגמת הנדסת חשמל · כיתה י'</footer>
 </div>
+
 <script>
 (function () {
   var root = document.documentElement, btn = document.getElementById('themeBtn');
@@ -452,9 +479,6 @@ footer { color: var(--muted); font-size: 14px; text-align: center; margin-top: 3
   });
 })();
 </script>
-  </script>
 </body>
 </html>
-
-</body>
-</html>
+```
