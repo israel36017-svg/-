@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בקרים ומיקרו-בקרים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1c2330;
+  --muted: #5a6475;
+  --border: #dde2ea;
+  --accent: #1f6feb;
+  --accent-soft: #e7f0ff;
+  --plc: #b35c00;
+  --plc-soft: #fff1e0;
+  --mcu: #0a7d55;
+  --mcu-soft: #e3f6ee;
+  --warn-soft: #fff7d6;
+  --code-bg: #f0f2f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c;
+    --surface: #1a2029;
+    --text: #e6eaf0;
+    --muted: #9aa5b5;
+    --border: #2d3542;
+    --accent: #5b9dff;
+    --accent-soft: #1b2a44;
+    --plc: #ffad5c;
+    --plc-soft: #3a2a17;
+    --mcu: #4fd1a1;
+    --mcu-soft: #16332a;
+    --warn-soft: #3a3418;
+    --code-bg: #0d1117;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c;
+  --surface: #1a2029;
+  --text: #e6eaf0;
+  --muted: #9aa5b5;
+  --border: #2d3542;
+  --accent: #5b9dff;
+  --accent-soft: #1b2a44;
+  --plc: #ffad5c;
+  --plc-soft: #3a2a17;
+  --mcu: #4fd1a1;
+  --mcu-soft: #16332a;
+  --warn-soft: #3a3418;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Heebo", "Segoe UI", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+}
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 16px 64px; }
+header.hero {
+  padding: 48px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.eyebrow { color: var(--accent); font-weight: 700; font-size: 14px; letter-spacing: .02em; }
+h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.25; margin: 8px 0 12px; font-weight: 800; }
+.lead { color: var(--muted); font-size: 19px; margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 12px; font-size: 14px; color: var(--muted);
+}
+nav.toc {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--bg); padding: 10px 0; margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; white-space: nowrap;
+}
+nav.toc a {
+  display: inline-block; margin-left: 6px; padding: 4px 12px;
+  border-radius: 999px; font-size: 14px; text-decoration: none;
+  color: var(--text); border: 1px solid var(--border); background: var(--surface);
+}
+nav.toc a:hover { border-color: var(--accent); color: var(--accent); }
+section {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px; margin: 20px 0;
+}
+h2 { font-size: 24px; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+h2 .num {
+  display: inline-grid; place-items: center; width: 34px; height: 34px;
+  border-radius: 50%; background: var(--accent); color: #fff; font-size: 17px; flex: none;
+}
+h2 .time { font-size: 14px; font-weight: 500; color: var(--muted); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 19px; margin: 24px 0 8px; }
+.point { font-weight: 500; margin-top: 4px; }
+p { margin: 8px 0; }
+ul, ol { padding-inline-start: 24px; margin: 8px 0; }
+li { margin: 4px 0; }
+.en { font-size: .9em; color: var(--muted); }
+.table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 15.5px; min-width: 560px; }
+th, td { padding: 10px 12px; text-align: right; vertical-align: top; border-bottom: 1px solid var(--border); }
+th { background: var(--accent-soft); font-weight: 700; }
+tr:last-child td { border-bottom: none; }
+th.plc { background: var(--plc-soft); color: var(--plc); }
+th.mcu { background: var(--mcu-soft); color: var(--mcu); }
+.yes { color: var(--mcu); font-weight: 700; }
+.no { color: #d1435b; font-weight: 700; }
+.callout {
+  border-radius: 10px; padding: 14px 16px; margin: 14px 0;
+  background: var(--accent-soft); border-inline-start: 4px solid var(--accent);
+}
+.callout.teacher { background: var(--warn-soft); border-color: #c99a00; }
+.callout .label { font-weight: 700; display: block; margin-bottom: 2px; }
+blockquote {
+  margin: 12px 0; padding: 14px 18px; font-size: 19px; font-weight: 500;
+  background: var(--accent-soft); border-radius: 10px;
+}
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 14px 0; }
+.card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.card.plc { background: var(--plc-soft); border-color: transparent; }
+.card.mcu { background: var(--mcu-soft); border-color: transparent; }
+.card h4 { margin: 0 0 6px; font-size: 18px; }
+.card.plc h4 { color: var(--plc); }
+.card.mcu h4 { color: var(--mcu); }
+.flow { display: flex; align-items: stretch; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
+.flow .step {
+  flex: 1 1 180px; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; text-align: center;
+}
+.flow .step b { display: block; font-size: 18px; }
+.flow .arrow { align-self: center; font-size: 22px; color: var(--muted); }
+pre {
+  direction: ltr; text-align: left; background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 14.5px; line-height: 1.55;
+  font-family: Consolas, "Courier New", monospace;
+}
+.timebar { display: flex; height: 34px; border-radius: 8px; overflow: hidden; margin: 12px 0 6px; font-size: 13px; }
+.timebar div { display: grid; place-items: center; color: #fff; font-weight: 700; white-space: nowrap; overflow: hidden; }
+.timelegend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: var(--muted); }
+.timelegend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-inline-end: 6px; background: var(--c); }
+details.answer { margin-top: 6px; }
+details.answer summary { cursor: pointer; color: var(--accent); font-size: 15px; }
+.checklist li { list-style: none; position: relative; padding-inline-start: 4px; }
+.checklist li::before { content: "✔"; color: var(--mcu); position: absolute; right: -22px; }
+footer { color: var(--muted); font-size: 14px; text-align: center; margin-top: 32px; }
+.theme-btn {
+  position: fixed; bottom: 16px; left: 16px; z-index: 10;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 14px; cursor: pointer;
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  section { padding: 18px 16px; }
+  .flow .arrow { display: none; }
+}
+@media print {
+  nav.toc, .theme-btn { display: none; }
+  body { background: #fff; color: #000; font-size: 13pt; }
+  section { break-inside: avoid-page; border-color: #ccc; }
+  details.answer[open] summary, details.answer summary { display: none; }
+  details.answer > *:not(summary) { display: block; }
+}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="החלפת ערכת צבעים">🌓 תצוגה</button>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">מגמת הנדסת חשמל · כיתה י'</div>
+  <h1>בקרים לעומת מיקרו-בקרים</h1>
+  <p class="lead">PLC מול Arduino ו-ESP32: שימושים, יתרונות וחסרונות, ואיך מהנדסים משתמשים בבינה מלאכותית בעבודה עם בקרים.</p>
+  <div class="meta">
+    <span class="chip">⏱ 90 דקות (שיעור כפול)</span>
+    <span class="chip">ידע קודם: מעגל חשמלי בסיסי</span>
+    <span class="chip">לא נדרש ידע בתכנות</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="תוכן השיעור">
+  <a href="#details">פרטי השיעור</a>
+  <a href="#s1">1 · פתיחה</a>
+  <a href="#s2">2 · ההבדלים</a>
+  <a href="#s3">3 · יישומים</a>
+  <a href="#s4">4 · השוואה</a>
+  <a href="#s5">5 · AI</a>
+  <a href="#s6">6 · סיכום</a>
+</nav>
+
+<!-- פרטי השיעור -->
+<section id="details">
+  <h2>פרטי השיעור</h2>
+  <p class="point">בסוף השיעור התלמידים יידעו להסביר מה ההבדל בין בקר תעשייתי (PLC) למיקרו-בקר (Microcontroller), ולבחור את המתאים לכל משימה.</p>
+
+  <div class="table-wrap"><table>
+    <tr><th>פריט</th><th>פירוט</th></tr>
+    <tr><td>קהל יעד</td><td>כיתה י', מגמת הנדסת חשמל (שנה ראשונה במגמה)</td></tr>
+    <tr><td>משך</td><td>90 דקות (שיעור כפול). אפשר לקצר ל-45 דקות: לדלג על הפעילות המסכמת ולקצר את ההדגמה</td></tr>
+    <tr><td>ידע קודם</td><td>מעגל חשמלי בסיסי, מתג, נורה, מנוע. אין צורך בידע בתכנות</td></tr>
+    <tr><td>ציוד</td><td>מקרן, לוח. רצוי: לוח Arduino Uno עם נורית LED, ותמונה או סרטון של לוח PLC בארון חשמל</td></tr>
+  </table></div>
+
+  <h3>מטרות השיעור — התלמיד יוכל:</h3>
+  <ol>
+    <li>להגדיר מהו בקר ומה תפקידו: קלט <span class="en">(Input)</span> ← עיבוד <span class="en">(Processing)</span> ← פלט <span class="en">(Output)</span>.</li>
+    <li>להסביר את ההבדלים המרכזיים בין PLC למיקרו-בקר.</li>
+    <li>לתת דוגמה ליישום מעשי של כל אחד מהם.</li>
+    <li>לנמק בחירה בין השניים לפי יתרונות וחסרונות.</li>
+    <li>לתאר איך מהנדסים וטכנאים משתמשים בכלי בינה מלאכותית <span class="en">(AI)</span> בעבודה עם בקרים, ומה הגבולות שלהם.</li>
+  </ol>
+
+  <h3>חלוקת הזמן</h3>
+  <div class="timebar" role="img" aria-label="חלוקת זמן: פתיחה 10, הבדלים 20, יישומים 15, השוואה 10, AI 20, סיכום 15 דקות">
+    <div style="flex:10;background:#5b7bd5">10</div>
+    <div style="flex:20;background:#1f6feb">20</div>
+    <div style="flex:15;background:#0a7d55">15</div>
+    <div style="flex:10;background:#b35c00">10</div>
+    <div style="flex:20;background:#8a3ffc">20</div>
+    <div style="flex:15;background:#c0365a">15</div>
+  </div>
+  <div class="timelegend">
+    <span style="--c:#5b7bd5">פתיחה ומבוא</span>
+    <span style="--c:#1f6feb">ההבדלים המרכזיים</span>
+    <span style="--c:#0a7d55">יישומים בתעשייה</span>
+    <span style="--c:#b35c00">טבלת השוואה</span>
+    <span style="--c:#8a3ffc">שילוב AI</span>
+    <span style="--c:#c0365a">פעילות וסיכום</span>
+  </div>
+</section>
+
+<!-- שלב 1 -->
+<section id="s1">
+  <h2><span class="num">1</span>פתיחה ומבוא <span class="time">10 דקות</span></h2>
+  <p class="point">המסר של הפתיחה: בקר הוא "המוח" של מערכת — הוא קולט מידע, מחליט ומפעיל.</p>
+
+  <h3>שאלת פתיחה לכיתה (על הלוח)</h3>
+  <blockquote>"מה משותף למכונת כביסה, לרמזור בצומת, למכונת קפה ולפס ייצור במפעל של בקבוקי קולה?"</blockquote>
+  <p>תנו לתלמידים 2–3 דקות לנחש. התשובה שאנחנו מכוונים אליה: בכולן יש רכיב שמקבל מידע, מחליט מה לעשות ומפעיל משהו — בקר.</p>
+
+  <h3>הסבר בגובה העיניים — משל "השוטר בצומת"</h3>
+  <div class="flow">
+    <div class="step"><b>קלט <span class="en">Input</span></b>העיניים: השוטר רואה מה קורה.<br><span class="en">חיישנים (Sensors), לחצנים, מתגים</span></div>
+    <div class="arrow">←</div>
+    <div class="step"><b>עיבוד <span class="en">Processing</span></b>המוח: השוטר מחליט לפי כללים.<br><span class="en">התוכנית שרצה בבקר</span></div>
+    <div class="arrow">←</div>
+    <div class="step"><b>פלט <span class="en">Output</span></b>הידיים: השוטר מסמן לרכבים.<br><span class="en">מנועים, נורות, ממסרים (Relays), מפעילים (Actuators)</span></div>
+  </div>
+
+  <div class="callout teacher"><span class="label">נקודת מעבר למורה</span>"אז אם כל המכשירים האלה עושים אותו דבר — למה במפעל של קולה שמים קופסה שעולה אלפי שקלים, ובמכונת הקפה שבבית שבב שעולה כמה שקלים?" — זו בדיוק השאלה של השיעור.</div>
+</section>
+
+<!-- שלב 2 -->
+<section id="s2">
+  <h2><span class="num">2</span>ההבדלים המרכזיים — PLC לעומת מיקרו-בקר <span class="time">20 דקות</span></h2>
+  <p class="point">שניהם עושים אותו תפקיד (קלט ← עיבוד ← פלט), אבל PLC נבנה לשרוד שנים במפעל, ומיקרו-בקר נבנה להיות קטן, זול וגמיש.</p>
+
+  <h3>משל לכיתה: ג'יפ צבאי מול קורקינט חשמלי</h3>
+  <div class="cards">
+    <div class="card plc"><h4>🚙 PLC = ג'יפ צבאי</h4>כבד, יקר ומגושם, אבל נוסע בבוץ, בחום ובאבק, 24 שעות ביממה, שנים.</div>
+    <div class="card mcu"><h4>🛴 מיקרו-בקר = קורקינט חשמלי</h4>קטן, זול וכיף, מעולה לעיר, אבל לא תיקחו אותו למסע במדבר.</div>
+  </div>
+
+  <h3>מה זה PLC?</h3>
+  <p><b>בקר לוגי מתוכנת <span class="en">(Programmable Logic Controller)</span></b> — מחשב תעשייתי קשיח שמותקן בארון חשמל על מסילת DIN <span class="en">(DIN Rail)</span>.</p>
+  <ul>
+    <li>מקבל מתח תעשייתי של 24V DC (ולעתים 230V AC) ישירות מחיישנים ומלחצנים.</li>
+    <li>מודולרי: מוסיפים כרטיסי כניסות/יציאות <span class="en">(I/O Modules)</span> לפי הצורך.</li>
+    <li>מתוכנת בשפות תעשייתיות לפי תקן IEC 61131-3, בעיקר שפת סולם <span class="en">(Ladder Diagram)</span> — שנראית כמו שרטוט חשמלי של מגעים וסלילים.</li>
+    <li>רץ במחזור סריקה קבוע <span class="en">(Scan Cycle)</span>: קורא כניסות ← מריץ תוכנית ← כותב יציאות, שוב ושוב.</li>
+    <li>יצרנים מוכרים: Siemens, Allen-Bradley, Schneider, Unitronics (חברה ישראלית!).</li>
+  </ul>
+
+  <h3>מה זה מיקרו-בקר?</h3>
+  <p><b>מיקרו-בקר <span class="en">(Microcontroller, MCU)</span></b> — שבב אחד קטן שמכיל מעבד, זיכרון וכניסות/יציאות. מחשב שלם בגודל של ציפורן.</p>
+  <ul>
+    <li>עובד במתח נמוך של 3.3V או 5V. חיבור ישיר של 24V או 230V ישרוף אותו — צריך ממסר או מצמד אופטי <span class="en">(Optocoupler)</span> באמצע.</li>
+    <li>מתוכנת בשפות תכנות כמו C/C++ או MicroPython.</li>
+    <li><b>Arduino</b> — לוח פיתוח פשוט ללימוד ולאב-טיפוס <span class="en">(Prototype)</span>.</li>
+    <li><b>ESP32</b> — מיקרו-בקר מהיר יותר עם Wi-Fi ו-Bluetooth מובנים, פופולרי במוצרי בית חכם ואינטרנט של הדברים <span class="en">(IoT)</span>.</li>
+  </ul>
+
+  <h3>דוגמה להמחשה על הלוח: אותה משימה, שתי דרכים</h3>
+  <p>המשימה: כשלוחצים על לחצן — נורה נדלקת.</p>
+  <div class="cards">
+    <div>
+      <b>ב-Arduino (שפת C++):</b>
+<pre>void loop() {
+  if (digitalRead(2) == HIGH) {  // is the button pressed?
+    digitalWrite(13, HIGH);      // turn the light on
+  } else {
+    digitalWrite(13, LOW);       // turn the light off
+  }
+}</pre>
+    </div>
+    <div>
+      <b>ב-PLC (שפת סולם, Ladder):</b>
+<pre>|----[ I0.0 ]-------------( Q0.0 )----|
+     Button                 Lamp</pre>
+    </div>
+  </div>
+  <div class="callout"><span class="label">שאלו את הכיתה</span>"איזו גרסה נראית לכם מוכרת יותר משיעורי חשמל?" — שפת הסולם נראית כמו שרטוט חשמלי, ולכן חשמלאים במפעלים מתכנתים בה בקלות.</div>
+</section>
+
+<!-- שלב 3 -->
+<section id="s3">
+  <h2><span class="num">3</span>יישומים מעשיים בתעשייה המודרנית <span class="time">15 דקות</span></h2>
+  <p class="point">כלל אצבע: אם תקלה תעצור פס ייצור או תסכן אנשים — PLC. אם צריך מוצר קטן, זול ומחובר לרשת — מיקרו-בקר.</p>
+
+  <div class="table-wrap"><table>
+    <tr><th>תחום</th><th class="plc">PLC</th><th class="mcu">מיקרו-בקר (Arduino / ESP32 ודומיהם)</th></tr>
+    <tr><td>מפעלים וייצור</td><td>פס מילוי בקבוקים, מסועים, זרועות רובוטיות בקו ייצור רכב</td><td>חיישני ניטור אלחוטיים שמדווחים על רטט או חום של מנוע</td></tr>
+    <tr><td>תשתיות ומים</td><td>תחנות שאיבה, מתקני התפלה, רמזורים בצומת</td><td>מונה מים חכם, חיישני איכות אוויר בעיר</td></tr>
+    <tr><td>חשמל ואנרגיה</td><td>בקרת תחנת משנה, הפעלת גנרטור חירום, שדות סולאריים גדולים</td><td>מעקב צריכת חשמל בבית, מונה חכם</td></tr>
+    <tr><td>מבנים</td><td>מעליות, מערכות מיזוג אוויר מרכזיות בקניון</td><td>בית חכם: תאורה, תריסים, שליטה מהסלולרי</td></tr>
+    <tr><td>מוצרי צריכה</td><td>—</td><td>מכונת כביסה, מיקרוגל, שלט טלוויזיה, שעון חכם, רחפן</td></tr>
+    <tr><td>חקלאות</td><td>מערכות השקיה מרכזיות, בקרת רפת רביות אוטומטית</td><td>חיישן לחות קרקע ששולח נתונים לענן</td></tr>
+  </table></div>
+
+  <div class="callout"><span class="label">לא תמיד "או — או"</span>במפעל מודרני (תעשייה 4.0, <span class="en">Industry 4.0</span>) השניים עובדים יחד. ה-PLC שולט בפס הייצור, וחיישנים קטנים מבוססי ESP32 אוספים נתונים מסביב ושולחים למערכת הניטור. קיימים גם לוחות ביניים: מיקרו-בקרים במעטפת תעשייתית (כמו Arduino Opta או בקרי ESP32 למסילת DIN).</div>
+
+  <h3>פעילות קצרה (5 דקות) — "מי שולט כאן?"</h3>
+  <p>הקריאו מכשיר, והתלמידים מצביעים PLC או מיקרו-בקר ומנמקים:</p>
+  <div class="table-wrap"><table>
+    <tr><th>מכשיר</th><th>תשובה</th></tr>
+    <tr><td>רמזור בצומת</td><td><details class="answer"><summary>הצג תשובה</summary>PLC</details></td></tr>
+    <tr><td>שעון חכם</td><td><details class="answer"><summary>הצג תשובה</summary>מיקרו-בקר</details></td></tr>
+    <tr><td>קו אריזה במפעל שוקולד</td><td><details class="answer"><summary>הצג תשובה</summary>PLC</details></td></tr>
+    <tr><td>מזגן בבית</td><td><details class="answer"><summary>הצג תשובה</summary>מיקרו-בקר</details></td></tr>
+    <tr><td>מעלית בבניין משרדים</td><td><details class="answer"><summary>הצג תשובה</summary>PLC</details></td></tr>
+    <tr><td>רובוט שואב אבק</td><td><details class="answer"><summary>הצג תשובה</summary>מיקרו-בקר</details></td></tr>
+  </table></div>
+</section>
+
+<!-- שלב 4 -->
+<section id="s4">
+  <h2><span class="num">4</span>טבלת השוואה — יתרונות וחסרונות <span class="time">10 דקות</span></h2>
+  <p class="point">אין "טוב יותר" — יש "מתאים יותר למשימה". מומלץ לבנות את הטבלה יחד עם הכיתה על הלוח, שורה אחר שורה. המחירים מקורבים ולשם המחשה בלבד.</p>
+
+  <div class="table-wrap"><table>
+    <tr><th>קריטריון</th><th class="plc">PLC (בקר תעשייתי)</th><th class="mcu">מיקרו-בקר (Arduino / ESP32)</th></tr>
+    <tr><td>אמינות <span class="en">(Reliability)</span></td><td><span class="yes">✔</span> מאוד גבוהה, עובד שנים ללא הפסקה</td><td><span class="no">✘</span> תלויה בתכנון המעגל והמארז</td></tr>
+    <tr><td>עמידות לסביבה</td><td><span class="yes">✔</span> עמיד לחום, רעידות, אבק ורעש חשמלי <span class="en">(Noise)</span></td><td><span class="no">✘</span> רגיש לרעש, לחום וללחות</td></tr>
+    <tr><td>מחיר</td><td><span class="no">✘</span> יקר: מאות עד אלפי שקלים</td><td><span class="yes">✔</span> זול: עשרות שקלים</td></tr>
+    <tr><td>גודל</td><td><span class="no">✘</span> גדול, דורש ארון חשמל</td><td><span class="yes">✔</span> קטן מאוד, נכנס בכל מוצר</td></tr>
+    <tr><td>מתח עבודה</td><td><span class="yes">✔</span> 24V תעשייתי, חיבור ישיר לחיישנים</td><td><span class="no">✘</span> 3.3V–5V, דרושים ממסרים ומעגלי התאמה</td></tr>
+    <tr><td>צריכת הספק</td><td><span class="no">✘</span> גבוהה יחסית</td><td><span class="yes">✔</span> נמוכה, מתאים לסוללה</td></tr>
+    <tr><td>תכנות</td><td><span class="yes">✔</span> שפת סולם מוכרת לחשמלאים<br><span class="no">✘</span> תוכנות פיתוח של היצרן, לעתים בתשלום</td><td><span class="yes">✔</span> גמישה מאוד (C++, Python), תוכנה חינמית<br><span class="no">✘</span> דורשת ידע בתכנות</td></tr>
+    <tr><td>תקשורת ואינטרנט</td><td>פרוטוקולים תעשייתיים (Modbus, Profinet)</td><td><span class="yes">✔</span> ESP32: Wi-Fi ו-Bluetooth מובנים</td></tr>
+    <tr><td>תחזוקה ותיקון</td><td><span class="yes">✔</span> מודולרי, מחליפים כרטיס וממשיכים</td><td><span class="no">✘</span> לרוב מחליפים את כל הלוח</td></tr>
+    <tr><td>תקנים ובטיחות</td><td><span class="yes">✔</span> עומד בתקנים תעשייתיים (דגמי בטיחות מיוחדים)</td><td><span class="no">✘</span> ללא אישור תעשייתי בברירת מחדל</td></tr>
+    <tr><td>מתאים במיוחד ל</td><td>מפעלים, תשתיות, מערכות שאסור שייעצרו</td><td>מוצרי צריכה, IoT, אב-טיפוס, פרויקטים בבית הספר</td></tr>
+  </table></div>
+
+  <div class="callout"><span class="label">שאלת חשיבה לכיתה</span>"למה בית חולים לא ישתמש ב-Arduino כדי לשלוט בגנרטור החירום, גם אם זה יחסוך כסף?"
+    <details class="answer"><summary>הצג תשובה</summary>אמינות, עמידות לרעש ותקני בטיחות — חיי אדם תלויים בזה.</details>
+  </div>
+</section>
+
+<!-- שלב 5 -->
+<section id="s5">
+  <h2><span class="num">5</span>שילוב בינה מלאכותית (AI) בעבודה עם בקרים <span class="time">20 דקות</span></h2>
+  <p class="point">כלי AI הם עוזר מקצועי מצוין — אבל המהנדס אחראי על התוצאה. מסר מרכזי לתלמידים: ה-AI הוא כמו טכנאי מתחיל מהיר ומוכשר, שמדי פעם טועה בביטחון מלא.</p>
+
+  <h3>באילו שלבים משתמשים ב-AI?</h3>
+  <div class="table-wrap"><table>
+    <tr><th>שלב בפרויקט</th><th>מה ה-AI עושה</th><th>דוגמה לבקשה <span class="en">(Prompt)</span></th><th>מה המהנדס חייב לבדוק</th></tr>
+    <tr><td><b>1. תכנון מערכת</b><br><span class="en">System Design</span></td><td>מציע ארכיטקטורה, רכיבים ובחירת בקר</td><td>"אני רוצה לבנות מערכת השקיה לגינה. איזה בקר ואילו חיישנים כדאי?"</td><td>האם הרכיבים קיימים ומתאימים למתח ולתקציב</td></tr>
+    <tr><td><b>2. תכנון חשמלי</b></td><td>מסביר חיבורים, מחשב נגדים וזרמים</td><td>"כמה נגד צריך לנורית LED אדומה ביציאה של 5V?"</td><td>חישוב חוק אוהם בעצמכם — טעות כאן שורפת רכיבים</td></tr>
+    <tr><td><b>3. כתיבת קוד</b><br><span class="en">Coding</span></td><td>כותב קוד Arduino/ESP32, מסביר אותו שורה אחר שורה, עוזר לתרגם לוגיקה לשפת טקסט מובנה <span class="en">(Structured Text)</span> של PLC</td><td>"כתוב קוד ESP32 שמדליק מאוורר כשהטמפרטורה מעל 28 מעלות, והסבר כל שורה"</td><td>שמספרי הפינים <span class="en">(Pins)</span> תואמים לחיווט האמיתי; להבין כל שורה לפני העלאה</td></tr>
+    <tr><td><b>4. איתור תקלות</b><br><span class="en">Debugging</span></td><td>מפענח הודעות שגיאה, מציע סיבות אפשריות לתקלה לפי התסמינים</td><td>"המנוע לא מסתובב למרות שהקוד עולה. הנה הקוד ותיאור החיבור. מה לבדוק?"</td><td>לאמת במדידה אמיתית עם מולטימטר — ה-AI לא רואה את המעגל</td></tr>
+    <tr><td><b>5. תיעוד ותחזוקה</b></td><td>כותב הערות לקוד, מסמכי הפעלה, מפרש קבצי לוג של תקלות</td><td>"סכם את רשימת ההתראות <span class="en">(Alarms)</span> מהשבוע האחרון ומצא תבנית חוזרת"</td><td>שהמסקנות תואמות את הנתונים</td></tr>
+  </table></div>
+
+  <div class="callout"><span class="label">בתעשייה משתמשים גם ב-AI שרץ בתוך המערכת</span>תחזוקה חזויה <span class="en">(Predictive Maintenance)</span> — חיישני רטט וחום על מנוע שולחים נתונים, ומודל AI מזהה שהמנוע עומד להתקלקל לפני שזה קורה. יש אפילו מודלים קטנים שרצים על מיקרו-בקר עצמו <span class="en">(TinyML)</span>, למשל זיהוי קולי של "הדלק" על ESP32.</div>
+
+  <h3>הדגמה חיה בכיתה (10 דקות)</h3>
+  <ol>
+    <li>הקרינו על המסך כלי AI (כמו Claude או ChatGPT) ובקשו: "כתוב קוד Arduino שמהבהב נורה כל שנייה, והסבר לתלמיד כיתה י' כל שורה."</li>
+    <li>קראו יחד עם הכיתה את ההסבר. אם יש לוח Arduino — העלו את הקוד וראו שהוא עובד.</li>
+    <li><b>שתלו תקלה:</b> מחקו נקודה-פסיק אחת בקוד, הדביקו את הודעת השגיאה לכלי ושאלו מה הבעיה. כך התלמידים רואים Debugging בעזרת AI.</li>
+    <li>שאלו את הכלי שאלה שעלולה להוביל לטעות, כמו מספר פין של לוח ספציפי — ובדקו מול דף הנתונים <span class="en">(Datasheet)</span>. המסר: תמיד מאמתים.</li>
+  </ol>
+
+  <h3>כללי זהב לעבודה עם AI (לכתוב על הלוח)</h3>
+  <ul>
+    <li><b>מבינים לפני שמעתיקים</b> — קוד שלא הבנתם לא עולה לבקר.</li>
+    <li><b>בטיחות קודמת לכל</b> — במעגלי 230V ובמערכות PLC שמפעילות מכונות, כל שינוי עובר בדיקה של אדם מוסמך.</li>
+    <li><b>נותנים הקשר</b> — ככל שתפרטו יותר (דגם הלוח, החיבורים, הודעת השגיאה) — התשובה תהיה טובה יותר.</li>
+    <li><b>מאמתים מול המקור</b> — דף נתונים, מדריך יצרן, מדידה במולטימטר.</li>
+  </ul>
+</section>
+
+<!-- שלב 6 -->
+<section id="s6">
+  <h2><span class="num">6</span>פעילות מסכמת וסיכום <span class="time">15 דקות</span></h2>
+
+  <h3>פעילות בקבוצות: "חברת הייעוץ" (10 דקות)</h3>
+  <p>כל קבוצה (3–4 תלמידים) היא חברת ייעוץ הנדסית שקיבלה לקוח. על הקבוצה לבחור PLC או מיקרו-בקר, לנמק בשתי סיבות, ולהציע בקשה אחת שהיו שולחים לכלי AI כדי להתחיל.</p>
+  <div class="table-wrap"><table>
+    <tr><th>קבוצה</th><th>הלקוח והמשימה</th><th>תשובה מצופה (למורה)</th></tr>
+    <tr><td>א</td><td>מפעל משקאות — פס שממלא 2,000 בקבוקים בשעה, 24/7</td><td><details class="answer"><summary>הצג</summary>PLC: אמינות, עבודה רציפה, סביבה תעשייתית</details></td></tr>
+    <tr><td>ב</td><td>סטארט-אפ — עציץ חכם ששולח לטלפון התראה כשהאדמה יבשה</td><td><details class="answer"><summary>הצג</summary>מיקרו-בקר (ESP32): זול, קטן, Wi-Fi מובנה</details></td></tr>
+    <tr><td>ג</td><td>עירייה — בקרת משאבת שאיבת מי ביוב</td><td><details class="answer"><summary>הצג</summary>PLC: תשתית קריטית, אסור שתעצור</details></td></tr>
+    <tr><td>ד</td><td>תלמיד במגמה — פרויקט גמר של רובוט עוקב קו</td><td><details class="answer"><summary>הצג</summary>מיקרו-בקר (Arduino): זול, גמיש, קל ללמוד</details></td></tr>
+    <tr><td>ה</td><td>בית מלון — ניטור טמפרטורה ב-50 חדרים + בקרת מיזוג מרכזי</td><td><details class="answer"><summary>הצג</summary>שילוב: חיישני ESP32 בחדרים, PLC למערכת המרכזית — תשובת "בונוס"</details></td></tr>
+  </table></div>
+
+  <h3>סיכום (3 דקות)</h3>
+  <div class="cards">
+    <div class="card"><h4>בקר</h4>קלט ← עיבוד ← פלט.</div>
+    <div class="card plc"><h4>PLC</h4>הג'יפ הצבאי: אמין, עמיד, יקר — למפעלים ולתשתיות.</div>
+    <div class="card mcu"><h4>מיקרו-בקר</h4>הקורקינט: קטן, זול, גמיש — למוצרים, IoT ואב-טיפוס.</div>
+    <div class="card"><h4>AI</h4>עוזר מצוין לתכנון, קוד ואיתור תקלות — אבל האחריות והבדיקה שלכם.</div>
+  </div>
+
+  <h3>שאלות לבדיקת הבנה (כרטיס יציאה, 2 דקות)</h3>
+  <ol>
+    <li>מהם שלושת השלבים שכל בקר מבצע? תנו דוגמה לכל שלב במכונת כביסה.</li>
+    <li>למה אסור לחבר חיישן תעשייתי של 24V ישירות ל-Arduino, ומה עושים במקום?</li>
+    <li>ציינו יתרון אחד של PLC ויתרון אחד של ESP32.</li>
+    <li>כתבו בקשה (Prompt) לכלי AI שתעזור לכם לאתר תקלה במעגל שלא עובד. מה תבדקו בעצמכם אחרי שתקבלו תשובה?</li>
+  </ol>
+
+  <h3>משימה לבית (רשות)</h3>
+  <p>מצאו בבית שלושה מכשירים שיש בהם מיקרו-בקר. לכל אחד, כתבו מה הקלט, מה העיבוד ומה הפלט.</p>
+</section>
+
+<footer>מערך שיעור · מגמת הנדסת חשמל · כיתה י'</footer>
+</div>
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  try { var saved = localStorage.getItem('lesson-theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+  btn.addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme');
+    if (!cur) cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('lesson-theme', next); } catch (e) {}
+  });
+  window.addEventListener('beforeprint', function () {
+    document.querySelectorAll('details').forEach(function (d) { d.open = true; });
+  });
+})();
+</script>
+</body>
+</html>
